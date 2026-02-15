@@ -1,0 +1,44 @@
+name: Build and Publish to NuGet (Trusted Publishing)
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write  # 关键权限
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Pack
+      run: dotnet pack --configuration Release --no-build --output ./nupkg
+
+    # 获取临时 API 密钥
+    - name: NuGet login (via OIDC)
+      uses: NuGet/login@v1
+      id: nuget_login
+      with:
+        user: Orange-Icepop
+
+    # 使用临时密钥发布
+    - name: 📦 Push to NuGet
+      run: dotnet nuget push "./nupkg/*.nupkg" \
+             --source https://api.nuget.org/v3/index.json \
+             --api-key ${{ steps.nuget_login.outputs.token }}
