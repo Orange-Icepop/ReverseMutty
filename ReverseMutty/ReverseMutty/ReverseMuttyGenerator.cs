@@ -63,7 +63,7 @@ public class ReverseMuttyGenerator : IIncrementalGenerator
             var result = GenerateImmutableClass(classSymbol, compilation, listType, dictType, context.CancellationToken);
             if (!string.IsNullOrEmpty(result))
             {
-                context.AddSource($"{classSymbol.Name}Immutable.g.cs", SourceText.From(result, Encoding.UTF8));
+                context.AddSource($"Immutable{classSymbol.Name}.g.cs", SourceText.From(result, Encoding.UTF8));
             }
         }
     }

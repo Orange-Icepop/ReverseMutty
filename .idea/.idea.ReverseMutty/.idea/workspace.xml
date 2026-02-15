@@ -8,8 +8,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="88ad4267-b894-4704-a017-f743f13f4495" name="更改" comment="">
-      <change beforePath="$PROJECT_DIR$/ReverseMutty/ReverseMutty.Sample/Examples.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ReverseMutty/ReverseMutty.Sample/Examples.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ReverseMutty/ReverseMutty.Sample/SampleEntity.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.ReverseMutty/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ReverseMutty/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ReverseMutty/ReverseMutty/ReverseMuttyGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ReverseMutty/ReverseMutty/ReverseMuttyGenerator.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -20,9 +19,21 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "Orange-Icepop"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "git@github.com:Orange-Icepop/ReverseMutty.git",
+    "accountId": "14e57816-1149-4272-9045-1b644ba5a1a2"
+  }
+}]]></component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/9ec79157ded9e24de392e3e15ae2e97d9995733f9ba356bad252ef93938adf/ISymbol.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file:///tmp/JetBrainsPerUserTemp-1000-1/SourceGeneratedDocuments/381984287D26A9AFA11CEC31/ReverseMutty/ReverseMutty.ReverseMuttyGenerator/ExamplesImmutable.g.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file:///tmp/JetBrainsPerUserTemp-1000-1/SourceGeneratedDocuments/381984287D26A9AFA11CEC31/ReverseMutty/ReverseMutty.ReverseMuttyGenerator/ImmutableExamples.g.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo">{
@@ -79,7 +90,7 @@
       <option name="presentableId" value="Default" />
       <updated>1771138930857</updated>
       <workItem from="1771138933279" duration="3607000" />
-      <workItem from="1771145190136" duration="2821000" />
+      <workItem from="1771145190136" duration="4632000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit">
       <option name="closed" value="true" />
@@ -113,7 +124,15 @@
       <option name="project" value="LOCAL" />
       <updated>1771146332613</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="add enable of init-only attributes">
+      <option name="closed" value="true" />
+      <created>1771150600501</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1771150600501</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -121,13 +140,25 @@
   </component>
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="initial commit" />
     <MESSAGE value="basic functions" />
     <MESSAGE value="Add support for type parameter and converts" />
     <MESSAGE value="test complete" />
-    <option name="LAST_COMMIT_MESSAGE" value="test complete" />
+    <MESSAGE value="add enable of init-only attributes" />
+    <option name="LAST_COMMIT_MESSAGE" value="add enable of init-only attributes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
