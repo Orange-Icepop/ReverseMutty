@@ -3,25 +3,49 @@ name: Build and Publish to NuGet (Trusted Publishing)
 on:
   push:
     tags:
-      - 'v*'  # 当推送 v1.0.0 等标签时触发
-  workflow_dispatch:  # 允许手动触发
+      - 'v*'
+  workflow_dispatch:
 
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
     permissions:
-      id-token: write  # enable GitHub OIDC token issuance for this job
+      contents: read
+      id-token: write  # OIDC 所需权限
 
     steps:
-      # Build your artifacts/my-sdk.nupkg package here
+      # 1. 检出代码
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      # Get a short-lived NuGet API key
+      # 2. 安装 .NET SDK
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'  # 或 6.0.x / 7.0.x
+
+      # 3. 还原依赖
+      - name: Restore dependencies
+        run: dotnet restore
+
+      # 4. 构建项目（Release 配置）
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+      # 5. 打包 NuGet 包（指定输出目录为 ./nupkg）
+      - name: Pack
+        run: dotnet pack --configuration Release --no-build --output ./nupkg
+
+      # 6. 通过 OIDC 获取临时 API 密钥
       - name: NuGet login (OIDC → temp API key)
         uses: NuGet/login@v1
         id: login
         with:
           user: Orange-Icepop
 
-      # Push the package
-      - name: NuGet push
-        run: dotnet nuget push artifacts/my-sdk.nupkg --api-key ${{steps.login.outputs.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
+      # 7. 推送所有 .nupkg 文件到 NuGet
+      - name: Push to NuGet
+        run: dotnet nuget push "./nupkg/*.nupkg" \
+               --api-key ${{ steps.login.outputs.NUGET_API_KEY }} \
+               --source https://api.nuget.org/v3/index.json \
+               --skip-duplicate
