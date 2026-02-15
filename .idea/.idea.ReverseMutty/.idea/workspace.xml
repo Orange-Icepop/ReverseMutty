@@ -7,10 +7,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="88ad4267-b894-4704-a017-f743f13f4495" name="更改" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.ReverseMutty/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ReverseMutty/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ReverseMutty/ReverseMutty/ReverseMuttyGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ReverseMutty/ReverseMutty/ReverseMuttyGenerator.cs" afterDir="false" />
-    </list>
+    <list default="true" id="88ad4267-b894-4704-a017-f743f13f4495" name="更改" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -33,6 +30,7 @@
 }]]></component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/9ec79157ded9e24de392e3e15ae2e97d9995733f9ba356bad252ef93938adf/ISymbol.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file:///tmp/JetBrainsPerUserTemp-1000-1/SourceGeneratedDocuments/381984287D26A9AFA11CEC31/ReverseMutty/ReverseMutty.ReverseMuttyGenerator/GenerateImmutableAttribute.g.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file:///tmp/JetBrainsPerUserTemp-1000-1/SourceGeneratedDocuments/381984287D26A9AFA11CEC31/ReverseMutty/ReverseMutty.ReverseMuttyGenerator/ImmutableExamples.g.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
@@ -90,7 +88,7 @@
       <option name="presentableId" value="Default" />
       <updated>1771138930857</updated>
       <workItem from="1771138933279" duration="3607000" />
-      <workItem from="1771145190136" duration="4632000" />
+      <workItem from="1771145190136" duration="6067000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit">
       <option name="closed" value="true" />
@@ -132,7 +130,15 @@
       <option name="project" value="LOCAL" />
       <updated>1771150600501</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Add README.md">
+      <option name="closed" value="true" />
+      <created>1771152397393</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1771152397393</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -158,7 +164,8 @@
     <MESSAGE value="Add support for type parameter and converts" />
     <MESSAGE value="test complete" />
     <MESSAGE value="add enable of init-only attributes" />
-    <option name="LAST_COMMIT_MESSAGE" value="add enable of init-only attributes" />
+    <MESSAGE value="Add README.md" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add README.md" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
