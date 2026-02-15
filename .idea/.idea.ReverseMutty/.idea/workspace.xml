@@ -8,7 +8,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="88ad4267-b894-4704-a017-f743f13f4495" name="更改" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.ReverseMutty/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ReverseMutty/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ReverseMutty/ReverseMutty.Sample/Examples.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ReverseMutty/ReverseMutty.Sample/Examples.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ReverseMutty/ReverseMutty.Sample/SampleEntity.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/ReverseMutty/ReverseMutty/ReverseMuttyGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ReverseMutty/ReverseMutty/ReverseMuttyGenerator.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -21,6 +22,7 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/9ec79157ded9e24de392e3e15ae2e97d9995733f9ba356bad252ef93938adf/ISymbol.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file:///tmp/JetBrainsPerUserTemp-1000-1/SourceGeneratedDocuments/381984287D26A9AFA11CEC31/ReverseMutty/ReverseMutty.ReverseMuttyGenerator/ExamplesImmutable.g.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo">{
@@ -77,7 +79,7 @@
       <option name="presentableId" value="Default" />
       <updated>1771138930857</updated>
       <workItem from="1771138933279" duration="3607000" />
-      <workItem from="1771145190136" duration="769000" />
+      <workItem from="1771145190136" duration="2821000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit">
       <option name="closed" value="true" />
@@ -95,7 +97,23 @@
       <option name="project" value="LOCAL" />
       <updated>1771145147049</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Add support for type parameter and converts">
+      <option name="closed" value="true" />
+      <created>1771146054426</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1771146054426</updated>
+    </task>
+    <task id="LOCAL-00004" summary="test complete">
+      <option name="closed" value="true" />
+      <created>1771146332613</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1771146332613</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -107,7 +125,9 @@
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="initial commit" />
     <MESSAGE value="basic functions" />
-    <option name="LAST_COMMIT_MESSAGE" value="basic functions" />
+    <MESSAGE value="Add support for type parameter and converts" />
+    <MESSAGE value="test complete" />
+    <option name="LAST_COMMIT_MESSAGE" value="test complete" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

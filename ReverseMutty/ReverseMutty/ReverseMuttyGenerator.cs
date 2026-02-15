@@ -31,7 +31,6 @@ public class ReverseMuttyGenerator : IIncrementalGenerator
             .Where(static symbol => symbol is not null)
             .Select(static (symbol, _) => symbol!);
 
-        // 合并编译单元并生成代码
         var compilationAndClasses = context.CompilationProvider.Combine(classDeclarations.Collect());
         context.RegisterSourceOutput(compilationAndClasses,
             static (spc, source) => Execute(source.Left, source.Right, spc));
@@ -58,7 +57,6 @@ public class ReverseMuttyGenerator : IIncrementalGenerator
 
         var listType = compilation.GetTypeByMetadataName("System.Collections.Generic.List`1");
         var dictType = compilation.GetTypeByMetadataName("System.Collections.Generic.Dictionary`2");
-        // 不检查 null，在 ConvertType 中处理
 
         foreach (var classSymbol in classes.Distinct<INamedTypeSymbol>(SymbolEqualityComparer.Default))
         {
@@ -107,10 +105,10 @@ public class ReverseMuttyGenerator : IIncrementalGenerator
         var properties = new List<PropertyInfo>();
         var methods = new List<string>();
 
-        // 收集属性
+        // 收集所有具有 public getter 的属性（包括 get-only 和 init-only）
         foreach (var member in classSymbol.GetMembers())
         {
-            if (member is IPropertySymbol prop && IsPublicAutoProperty(prop))
+            if (member is IPropertySymbol prop && IsPublicProperty(prop))
             {
                 var propType = ConvertType(prop.Type, listType, dictType, compilation, classSymbol);
                 var defaultValue = GetDefaultValue(prop, cancellationToken);
@@ -131,10 +129,10 @@ public class ReverseMuttyGenerator : IIncrementalGenerator
                     var syntaxRef = method.DeclaringSyntaxReferences.FirstOrDefault();
                     if (syntaxRef?.GetSyntax(cancellationToken) is MethodDeclarationSyntax methodSyntax)
                     {
-                        // 移除特性列表（避免重复），并添加警告注释
+                        // 移除特性列表，并添加警告注释
                         var withoutAttr = methodSyntax.WithAttributeLists(default);
                         methods.Add($@"
-        // 注意：复制自原类 {className}，请确保方法体可编译（可能需调整对原类私有成员的访问）
+        // Warn: Copied from {className}, please ensure the compilability (may need to change the accessibility or the original class)
         {withoutAttr.ToFullString().Trim()}");
                     }
                 }
@@ -184,6 +182,7 @@ public class ReverseMuttyGenerator : IIncrementalGenerator
             sb.AppendLine("            {");
             foreach (var prop in properties)
             {
+                // 注意：若原始类中对应属性为只读，此赋值将导致编译错误，用户需自行调整
                 sb.AppendLine($"                {prop.Name} = this.{prop.Name},");
             }
             sb.Append("            };");
@@ -226,15 +225,10 @@ public class ReverseMuttyGenerator : IIncrementalGenerator
 
         return sb.ToString();
     }
-
-    private static bool IsPublicAutoProperty(IPropertySymbol prop)
+    
+    private static bool IsPublicProperty(IPropertySymbol prop)
     {
-        return prop is
-        {
-            DeclaredAccessibility: Accessibility.Public,
-            GetMethod.DeclaredAccessibility: Accessibility.Public,
-            SetMethod.DeclaredAccessibility: Accessibility.Public
-        };
+        return prop is { DeclaredAccessibility: Accessibility.Public, GetMethod.DeclaredAccessibility: Accessibility.Public };
     }
 
     private static string? GetDefaultValue(IPropertySymbol prop, System.Threading.CancellationToken cancellationToken)
