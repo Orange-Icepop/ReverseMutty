@@ -1,28 +1,18 @@
 using System.Collections.Generic;
-using Entities;
 
 namespace ReverseMutty.Sample;
 
 // This code will not compile until you build the project with the Source Generators
 
+[GenerateImmutable]
 public class Examples
 {
-    // Create generated entities, based on DDD.UbiquitousLanguageRegistry.txt
-    public object[] CreateEntities()
-    {
-        return new object[]
-        {
-            new Customer(),
-            new Employee(),
-            new Product(),
-            new Shop(),
-            new Stock()
-        };
-    }
+    public string Name { get; set; }
+    public int Game { get; set; }
 
-    // Execute generated method Report
-    public IEnumerable<string> CreateEntityReport(SampleEntity entity)
+    [InImmutable]
+    public bool IsMatch()
     {
-        return entity.Report();
+        return Game.ToString() == Name;
     }
 }
