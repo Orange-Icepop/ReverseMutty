@@ -7,7 +7,7 @@ namespace ReverseMutty.Sample;
 [GenerateImmutable]
 public class Examples
 {
-    public string Name { get; init; }
+    public string Name { get; init; } = "Bible";
     public int Game { get; set; }
 
     [InImmutable]
