@@ -278,17 +278,23 @@ public class ReverseMuttyGenerator : IIncrementalGenerator
     private record struct PropertyInfo(string Name, string Type, string? DefaultValue);
 }
 
-internal static class AttributesSource
+public static class AttributesSource
 {
     public const string GenerateImmutable = @"
 using System;
-[AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
-public sealed class GenerateImmutableAttribute : Attribute { }
+namespace ReverseMutty
+{
+    [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+    public sealed class GenerateImmutableAttribute : Attribute { }
+}
 ";
 
     public const string InImmutable = @"
 using System;
-[AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-public sealed class InImmutableAttribute : Attribute { }
+namespace ReverseMutty
+{
+    [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class InImmutableAttribute : Attribute { }
+}
 ";
 }

@@ -8,11 +8,20 @@
 
         <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
         <IsRoslynComponent>true</IsRoslynComponent>
-
+        
+        <!--NuGet-->
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Version>1.0.1</Version>
         <RootNamespace>ReverseMutty</RootNamespace>
         <PackageId>ReverseMutty</PackageId>
+        <Authors>Orange-Icepop</Authors>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        
+        <IncludeBuildOutput>false</IncludeBuildOutput>
+        
+        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
     </PropertyGroup>
-
+    
     <ItemGroup>
         <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
             <PrivateAssets>all</PrivateAssets>
@@ -21,6 +30,13 @@
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.3.0"/>
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.3.0"/>
     </ItemGroup>
-
+    
+    <ItemGroup>
+        <None Include="$(OutputPath)\$(AssemblyName).dll"
+              Pack="true"
+              PackagePath="analyzers/dotnet/cs"
+              Visible="false" />
+        <None Include="README.md" Pack="true" PackagePath="/" />
+    </ItemGroup>
 
 </Project>
