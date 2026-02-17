@@ -13,11 +13,13 @@ public class Examples
     public int Game { get; set; }
     public List<int> Numbers { get; set; } = [1, 1, 4, 5, 1, 4];
     public List<string> Strings { get; set; } = [""];
+    public Dictionary<string, int> Dictionary { get; set; } = new Dictionary<string, int>();
 
     [InImmutable]
     public bool IsMatch()
     {
         var match = new StringBuilder().AppendJoin(" ", Numbers);
+        this.ToImmutable();
         return match.ToString() == Name;
     }
 }
