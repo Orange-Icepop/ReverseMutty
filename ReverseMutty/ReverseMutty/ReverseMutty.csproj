@@ -11,7 +11,7 @@
         
         <!--NuGet-->
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>1.0.1</Version>
+        <Version>1.0.2</Version>
         <RootNamespace>ReverseMutty</RootNamespace>
         <PackageId>ReverseMutty</PackageId>
         <Authors>Orange-Icepop</Authors>
@@ -36,7 +36,7 @@
               Pack="true"
               PackagePath="analyzers/dotnet/cs"
               Visible="false" />
-        <None Include="README.md" Pack="true" PackagePath="/" />
+        <None Include="./../../README.md" Pack="true" PackagePath="/" />
     </ItemGroup>
 
 </Project>
