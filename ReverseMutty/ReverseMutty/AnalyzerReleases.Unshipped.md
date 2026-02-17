@@ -3,6 +3,6 @@
 
 ### New Rules
 
-Rule ID | Category | Severity | Notes
---------|----------|----------|-------
-RMG001 | ReverseMuttyGenerator | Error | ReverseMuttyGenerator
+| Rule ID | Category              | Severity | Notes                                                 |
+|---------|-----------------------|----------|-------------------------------------------------------|
+| RMG001  | ReverseMuttyGenerator | Error    | The target class must have a no-argument constructor. |
