@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 using ReverseMutty;
 
 namespace ReverseMutty.Sample;
@@ -8,7 +9,7 @@ namespace ReverseMutty.Sample;
 [GenerateImmutable]
 public class Examples
 {
-    public string Name { get; init; } = "Bible";
+    public string Name { get; } = "Bible";
     public int Game { get; set; }
     public List<int> Numbers { get; set; } = [1, 1, 4, 5, 1, 4];
     public List<string> Strings { get; set; } = [""];
@@ -16,6 +17,7 @@ public class Examples
     [InImmutable]
     public bool IsMatch()
     {
-        return Game.ToString() == Name;
+        var match = new StringBuilder().AppendJoin(" ", Numbers);
+        return match.ToString() == Name;
     }
 }

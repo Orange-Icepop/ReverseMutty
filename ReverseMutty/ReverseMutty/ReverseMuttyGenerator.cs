@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
 
 namespace ReverseMutty;
@@ -13,6 +14,14 @@ public class ReverseMuttyGenerator : IIncrementalGenerator
 {
     private const string GenerateImmutableAttrName = "GenerateImmutableAttribute";
     private const string InImmutableAttrName = "InImmutableAttribute";
+
+    private static readonly DiagnosticDescriptor s_missingParameterlessConstructor = new DiagnosticDescriptor(
+        id: "RMG001",
+        title: "Missing parameterless constructor",
+        messageFormat: "Type '{0}' must have a public parameterless constructor to be used with [GenerateImmutable]",
+        category: "ReverseMuttyGenerator",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true);
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
@@ -43,7 +52,7 @@ public class ReverseMuttyGenerator : IIncrementalGenerator
     {
         var classDecl = (ClassDeclarationSyntax)context.Node;
         var model = context.SemanticModel;
-        if (model.GetDeclaredSymbol(classDecl) is not INamedTypeSymbol classSymbol) return null;
+        if (model.GetDeclaredSymbol(classDecl) is not { } classSymbol) return null;
 
         var attr = classSymbol.GetAttributes().FirstOrDefault(ad =>
             ad.AttributeClass?.Name == GenerateImmutableAttrName ||
@@ -60,6 +69,18 @@ public class ReverseMuttyGenerator : IIncrementalGenerator
 
         foreach (var classSymbol in classes.Distinct<INamedTypeSymbol>(SymbolEqualityComparer.Default))
         {
+            // 检查 public 无参构造函数
+            bool hasPublicParameterlessCtor = classSymbol.Constructors.Any(ctor =>
+                ctor.Parameters.Length == 0 && ctor.DeclaredAccessibility == Accessibility.Public);
+            if (!hasPublicParameterlessCtor)
+            {
+                context.ReportDiagnostic(Diagnostic.Create(
+                    s_missingParameterlessConstructor,
+                    classSymbol.Locations.FirstOrDefault(),
+                    classSymbol.Name));
+                continue;
+            }
+
             var result = GenerateImmutableClass(classSymbol, compilation, listType, dictType, context.CancellationToken);
             if (!string.IsNullOrEmpty(result))
             {
@@ -104,6 +125,20 @@ public class ReverseMuttyGenerator : IIncrementalGenerator
 
         var properties = new List<PropertyInfo>();
         var methods = new List<string>();
+        var usings = new HashSet<string>();
+
+        // 收集原类所有部分文件中的 using
+        foreach (var syntaxRef in classSymbol.DeclaringSyntaxReferences)
+        {
+            if (syntaxRef.GetSyntax(cancellationToken) is ClassDeclarationSyntax classPartSyntax)
+            {
+                var cu = classPartSyntax.SyntaxTree.GetCompilationUnitRoot(cancellationToken);
+                foreach (var usingDirective in cu.Usings)
+                {
+                    usings.Add(usingDirective.ToString().Trim());
+                }
+            }
+        }
 
         // 收集所有具有 public getter 的属性（包括 get-only 和 init-only）
         foreach (var member in classSymbol.GetMembers())
@@ -112,7 +147,8 @@ public class ReverseMuttyGenerator : IIncrementalGenerator
             {
                 var propType = ConvertType(prop.Type, listType, dictType, compilation, classSymbol);
                 var defaultValue = GetDefaultValue(prop, cancellationToken);
-                properties.Add(new PropertyInfo(prop.Name, propType, defaultValue, prop.Type));
+                var hasSetter = prop.SetMethod != null; // 有 setter 或 init 访问器
+                properties.Add(new PropertyInfo(prop.Name, propType, defaultValue, prop.Type, hasSetter));
             }
         }
 
@@ -134,15 +170,28 @@ public class ReverseMuttyGenerator : IIncrementalGenerator
                         methods.Add($@"
     // Warn: Copied from {className}, please ensure the compilability (may need to change the accessibility or the original class)
     {withoutAttr.ToFullString().Trim()}");
+
+                        // 收集方法所在文件中的 using
+                        var methodCu = methodSyntax.SyntaxTree.GetCompilationUnitRoot(cancellationToken);
+                        foreach (var usingDirective in methodCu.Usings)
+                        {
+                            usings.Add(usingDirective.ToString().Trim());
+                        }
                     }
                 }
             }
         }
 
+        // 添加必要的固定 using
+        usings.Add("using System.Collections.Generic;");
+        usings.Add("using System.Collections.Immutable;");
+        usings.Add("using System.Linq;");
+
         var sb = new StringBuilder();
-        sb.AppendLine("using System.Collections.Generic;");
-        sb.AppendLine("using System.Collections.Immutable;");
-        sb.AppendLine("using System.Linq;");
+        foreach (var u in usings.OrderBy(u => u))
+        {
+            sb.AppendLine(u);
+        }
         sb.AppendLine("#nullable enable");
         if (!string.IsNullOrEmpty(namespaceName))
         {
@@ -176,12 +225,13 @@ public class ReverseMuttyGenerator : IIncrementalGenerator
         sb.AppendLine();
         sb.AppendLine($"    public {className}{typeParameters} ToMutable()");
         sb.AppendLine("    {");
-        sb.Append($"        return new {className}{typeParameters}");
-        if (properties.Any())
+        var settableProps = properties.Where(p => p.HasSetter).ToList();
+        if (settableProps.Any())
         {
+            sb.Append($"        return new {className}{typeParameters}");
             sb.AppendLine();
             sb.AppendLine("        {");
-            foreach (var prop in properties)
+            foreach (var prop in settableProps)
             {
                 var conversion = ToMutableExpression($"this.{prop.Name}", prop.OriginalType);
                 sb.AppendLine($"            {prop.Name} = {conversion},");
@@ -190,7 +240,7 @@ public class ReverseMuttyGenerator : IIncrementalGenerator
         }
         else
         {
-            sb.Append("();");
+            sb.Append($"        return new {className}{typeParameters}();");
         }
         sb.AppendLine();
         sb.AppendLine("    }");
@@ -317,7 +367,7 @@ public class ReverseMuttyGenerator : IIncrementalGenerator
         return type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
     }
 
-    private record struct PropertyInfo(string Name, string Type, string? DefaultValue, ITypeSymbol OriginalType);
+    private record struct PropertyInfo(string Name, string Type, string? DefaultValue, ITypeSymbol OriginalType, bool HasSetter);
 }
 
 public static class AttributesSource
