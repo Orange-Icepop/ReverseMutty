@@ -6,26 +6,26 @@ using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 
-namespace Mutty.Models;
+namespace ReverseMutty.Models;
 
 /// <summary>
 /// Represents some string tokens that will be used to generate a record.
 /// </summary>
-public class RecordTokens
+public class ClassTokens
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="RecordTokens"/> class.
+    /// Initializes a new instance of the <see cref="ClassTokens"/> class.
     /// </summary>
-    /// <param name="recordSymbol">The record symbol.</param>
-    public RecordTokens(INamedTypeSymbol recordSymbol)
+    /// <param name="classSymbol">The record symbol.</param>
+    public ClassTokens(INamedTypeSymbol classSymbol)
     {
-        RecordName = recordSymbol.Name;
+        ClassName = classSymbol.Name;
 
-        NamespaceName = (recordSymbol.ContainingNamespace.IsGlobalNamespace)
+        NamespaceName = (classSymbol.ContainingNamespace.IsGlobalNamespace)
             ? null
-            : recordSymbol.ContainingNamespace.ToString();
+            : classSymbol.ContainingNamespace.ToString();
 
-        Properties = recordSymbol
+        Properties = classSymbol
             .GetMembers()
             .OfType<IPropertySymbol>()
             .Where(static p =>
@@ -40,22 +40,22 @@ public class RecordTokens
     }
 
     /// <summary>
-    /// Gets the name of the record.
+    /// Gets the name of the class.
     /// </summary>
-    public string RecordName { get; }
+    public string ClassName { get; }
 
     /// <summary>
-    /// Gets the name of the mutable record.
+    /// Gets the name of the immutable record.
     /// </summary>
-    public string MutableRecordName => $"Mutable{RecordName}";
+    public string ImmutableRecordName => $"Immutable{ClassName}";
 
     /// <summary>
-    /// Gets the namespace of the record.
+    /// Gets the namespace of the class.
     /// </summary>
     public string? NamespaceName { get; }
 
     /// <summary>
-    /// Gets the properties of the record.
+    /// Gets the properties of the class.
     /// </summary>
     public ImmutableArray<PropertyModel> Properties { get; }
 }

@@ -4,17 +4,17 @@
 
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
-using Mutty.Abstractions;
-using Mutty.Models;
-using Mutty.Templates;
+using ReverseMutty.Abstractions;
+using ReverseMutty.Models;
+using ReverseMutty.Templates;
 
-namespace Mutty;
+namespace ReverseMutty;
 
 /// <summary>
 /// A generator that creates extension methods for mutable records.
 /// </summary>
 [Generator]
-public class MutableExtensionsGenerator : BaseSourceGenerator
+public class RecordExtensionsGenerator : BaseSourceGenerator
 {
     /// <inheritdoc />
     public override void GenerateCode(SourceProductionContext context, ImmutableArray<INamedTypeSymbol> recordTypes)
@@ -26,8 +26,8 @@ public class MutableExtensionsGenerator : BaseSourceGenerator
 
         foreach (INamedTypeSymbol record in recordTypes)
         {
-            RecordTokens recordTokens = new(record);
-            string recordName = recordTokens.RecordName;
+            ClassTokens recordTokens = new(record);
+            string recordName = recordTokens.ClassName;
             string? namespaceName = recordTokens.NamespaceName;
 
             // Generate extension methods

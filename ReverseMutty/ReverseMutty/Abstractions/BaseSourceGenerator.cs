@@ -10,7 +10,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 
-namespace Mutty.Abstractions;
+namespace ReverseMutty.Abstractions;
 
 /// <summary>
 /// The base source generator for incremental generation of records with the MutableGenerationAttribute.
@@ -20,11 +20,11 @@ public abstract class BaseSourceGenerator : IIncrementalGenerator
     /// <inheritdoc />
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        // Create a provider that finds all records with the MutableGenerationAttribute
+        // Create a provider that finds all classes with the ImmutableGenerationAttribute
         IncrementalValueProvider<ImmutableArray<INamedTypeSymbol>> recordTypesWithAttribute = context.SyntaxProvider
             .CreateSyntaxProvider(
-                predicate: static (syntaxNode, _) => CouldBeMutableGenerationAttribute(syntaxNode),
-                transform: static (ctx, _) => GetRecordTypeWithAttribute(ctx)!)
+                predicate: static (syntaxNode, _) => CouldBeImmutableGenerationAttribute(syntaxNode),
+                transform: static (ctx, _) => GetClassTypeWithAttribute(ctx)!)
             .Where(static type => type is not null) // Filter out nulls
             .Collect(); // Collect all relevant types
 
@@ -36,8 +36,8 @@ public abstract class BaseSourceGenerator : IIncrementalGenerator
     /// Generates the source code for the given record types.
     /// </summary>
     /// <param name="context">The source production context.</param>
-    /// <param name="recordTypes">The record types to generate code for.</param>
-    public abstract void GenerateCode(SourceProductionContext context, ImmutableArray<INamedTypeSymbol> recordTypes);
+    /// <param name="classTypes">The record types to generate code for.</param>
+    public abstract void GenerateCode(SourceProductionContext context, ImmutableArray<INamedTypeSymbol> classTypes);
 
     /// <summary>
     /// Adds the source code to the context.
@@ -50,7 +50,7 @@ public abstract class BaseSourceGenerator : IIncrementalGenerator
         context.AddSource(name, SourceText.From(source, Encoding.UTF8));
     }
 
-    private static bool CouldBeMutableGenerationAttribute(SyntaxNode syntaxNode)
+    private static bool CouldBeImmutableGenerationAttribute(SyntaxNode syntaxNode)
     {
         if (syntaxNode is not AttributeSyntax attribute)
         {
@@ -58,24 +58,24 @@ public abstract class BaseSourceGenerator : IIncrementalGenerator
         }
 
         string? name = ExtractName(attribute.Name);
-        return name is "MutableGeneration" or "MutableGenerationAttribute";
+        return name is "ImmutableGeneration" or "ImmutableGenerationAttribute";
     }
 
-    private static INamedTypeSymbol? GetRecordTypeWithAttribute(in GeneratorSyntaxContext context)
+    private static INamedTypeSymbol? GetClassTypeWithAttribute(in GeneratorSyntaxContext context)
     {
         var attributeSyntax = (AttributeSyntax)context.Node;
 
         // Check if the attribute is applied to a record declaration
-        if (attributeSyntax.Parent?.Parent is not RecordDeclarationSyntax recordDeclaration)
+        if (attributeSyntax.Parent?.Parent is not ClassDeclarationSyntax classDeclarationSyntax)
         {
             return null;
         }
 
         // Get the semantic model and check the type symbol
-        INamedTypeSymbol? type = context.SemanticModel.GetDeclaredSymbol(recordDeclaration);
+        INamedTypeSymbol? type = context.SemanticModel.GetDeclaredSymbol(classDeclarationSyntax);
 
         // Check if the type symbol has the MutableGenerationAttribute
-        return (type is null || !HasMutableGenerationAttribute(type)) ? null : type;
+        return (type is null || !HasImmutableGenerationAttribute(type)) ? null : type;
     }
 
     private static string? ExtractName(NameSyntax? name)
@@ -88,15 +88,15 @@ public abstract class BaseSourceGenerator : IIncrementalGenerator
         };
     }
 
-    private static bool HasMutableGenerationAttribute(ISymbol type)
+    private static bool HasImmutableGenerationAttribute(ISymbol type)
     {
         return type.GetAttributes().Any(static a =>
             a.AttributeClass is
             {
-                Name: "MutableGenerationAttribute",
+                Name: "ImmutableGenerationAttribute",
                 ContainingNamespace:
                 {
-                    Name: "Mutty",
+                    Name: "ReverseMutty",
                     ContainingNamespace.IsGlobalNamespace: true
                 }
             });

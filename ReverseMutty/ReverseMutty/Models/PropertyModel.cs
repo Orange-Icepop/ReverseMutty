@@ -7,7 +7,7 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace Mutty.Models;
+namespace ReverseMutty.Models;
 
 /// <summary>
 /// Represents a property of a class.
@@ -44,10 +44,11 @@ public class PropertyModel(IPropertySymbol propertySymbol)
         }
 
         // Detect immutable collections
-        return (type.OriginalDefinition
-            .ToDisplayString()
-            .StartsWith("System.Collections.Immutable.", StringComparison.Ordinal))
-            ? PropertyType.ImmutableCollection
-            : PropertyType.Other;
+        var str = type.OriginalDefinition.ToDisplayString();
+        if (str.StartsWith("System.Collections.Immutable.", StringComparison.Ordinal))
+            return PropertyType.ImmutableCollection;
+        if (str.StartsWith("System.Collections.", StringComparison.Ordinal)) 
+            return PropertyType.MutableCollection;
+        return PropertyType.Other;
     }
 }

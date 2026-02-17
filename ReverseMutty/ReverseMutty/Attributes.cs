@@ -3,9 +3,9 @@
 // See the LICENSE file in the project root for full license information.
 
 using Microsoft.CodeAnalysis;
-using Mutty.Templates;
+using ReverseMutty.Templates;
 
-namespace Mutty;
+namespace ReverseMutty;
 
 /// <summary>
 /// A generator that creates mutable wrappers for records.
@@ -19,8 +19,8 @@ public class Attributes : IIncrementalGenerator
         // Inject the marker attribute into the user's compilation.
         context.RegisterPostInitializationOutput(ctx =>
         {
-            string attributeSource = new MutableGenerationAttributeTemplate().GenerateCode();
-            const string fileName = "Mutty.MutableGenerationAttribute.g.cs";
+            string attributeSource = new ImmutableGenerationAttributeTemplate().GenerateCode();
+            const string fileName = "ReverseMutty.ImmutableGenerationAttribute.g.cs";
             ctx.AddSource(fileName, attributeSource);
         });
     }

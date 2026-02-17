@@ -4,14 +4,14 @@
 
 using System;
 
-namespace Mutty.CodeHelpers;
+namespace ReverseMutty.CodeHelpers;
 
 /// <summary>
 /// A thin wrapper over <see cref="IndentedStringBuilder" /> that adds indentation to each line built.
 /// </summary>
 public class IndentedCodeBuilder
 {
-    private const string ProjectName = "Mutty";
+    private const string ProjectName = "ReverseMutty";
 
     private readonly IndentedStringBuilder _stringBuilder = new(0, 4);
 

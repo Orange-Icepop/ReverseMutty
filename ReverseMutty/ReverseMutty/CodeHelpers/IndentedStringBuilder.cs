@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace Mutty.CodeHelpers;
+namespace ReverseMutty.CodeHelpers;
 
 /// <summary>
 ///     <para>

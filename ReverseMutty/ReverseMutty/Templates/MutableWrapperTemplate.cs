@@ -6,20 +6,20 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using Mutty.CodeHelpers;
-using Mutty.Models;
+using ReverseMutty.CodeHelpers;
+using ReverseMutty.Models;
 
-namespace Mutty.Templates;
+namespace ReverseMutty.Templates;
 
 /// <summary>
 /// A template that generates the mutable wrapper for a record.
 /// </summary>
 /// <param name="tokens">The tokens for the record.</param>
-public class MutableWrapperTemplate(RecordTokens tokens) : IndentedCodeBuilder
+public class ImmutableWrapperTemplate(ClassTokens tokens) : IndentedCodeBuilder
 {
     private readonly string? _namespaceName = tokens.NamespaceName;
-    private readonly string _recordName = tokens.RecordName;
-    private readonly string _mutableRecordName = tokens.MutableRecordName;
+    private readonly string _className = tokens.ClassName;
+    private readonly string _immutableRecordName = tokens.ImmutableRecordName;
     private readonly ImmutableArray<PropertyModel> _properties = tokens.Properties;
 
     /// <summary>
@@ -46,11 +46,11 @@ public class MutableWrapperTemplate(RecordTokens tokens) : IndentedCodeBuilder
 
     private void GenerateClass()
     {
-        Summary($"The mutable wrapper for the <see cref=\"{_recordName}\"/> record.");
-        Line($"public partial class {_mutableRecordName}");
+        Summary($"The immutable wrapper for the <see cref=\"{_className}\"/> record.");
+        Line($"public partial class {_immutableRecordName}");
         Braces(() =>
         {
-            Line($"private {_recordName} _record;");
+            Line($"private {_className} _record;");
             GenerateConstructor();
             GenerateBuilderMethod();
             GenerateImplicitOperatorToMutable();
@@ -62,9 +62,9 @@ public class MutableWrapperTemplate(RecordTokens tokens) : IndentedCodeBuilder
     private void GenerateConstructor()
     {
         EmptyLine();
-        Summary($"Initializes a new instance of the <see cref=\"{_mutableRecordName}\"/> class.");
+        Summary($"Initializes a new instance of the <see cref=\"{_immutableRecordName}\"/> class.");
         Line($"/// <param name=\"record\">The record to wrap.</param>");
-        Line($"public {_mutableRecordName}({_recordName} record)");
+        Line($"public {_immutableRecordName}({_className} record)");
         Braces(() =>
         {
             Line("_record = record;");
@@ -91,8 +91,8 @@ public class MutableWrapperTemplate(RecordTokens tokens) : IndentedCodeBuilder
     private void GenerateBuilderMethod()
     {
         EmptyLine();
-        Summary($"Builds a new instance of the <see cref=\"{_recordName}\"/> class.");
-        Line($"public {_recordName} Build()");
+        Summary($"Builds a new instance of the <see cref=\"{_className}\"/> class.");
+        Line($"public {_className} Build()");
         Braces(() =>
         {
             Line("return _record with");
@@ -224,16 +224,16 @@ public class MutableWrapperTemplate(RecordTokens tokens) : IndentedCodeBuilder
     private void GenerateImplicitOperatorToMutable()
     {
         EmptyLine();
-        Summary($"Performs an implicit conversion from <see cref=\"{_recordName}\"/> to <see cref=\"{_mutableRecordName}\"/>.");
-        Line($"public static implicit operator {_mutableRecordName}({_recordName} record)");
-        Braces(() => Line($"return new {_mutableRecordName}(record);"));
+        Summary($"Performs an implicit conversion from <see cref=\"{_className}\"/> to <see cref=\"{_immutableRecordName}\"/>.");
+        Line($"public static implicit operator {_immutableRecordName}({_className} record)");
+        Braces(() => Line($"return new {_immutableRecordName}(record);"));
     }
 
     private void GenerateImplicitOperatorToRecord()
     {
         EmptyLine();
-        Summary($"Performs an implicit conversion from <see cref=\"{_mutableRecordName}\"/> to <see cref=\"{_recordName}\"/>.");
-        Line($"public static implicit operator {_recordName}({_mutableRecordName} mutable)");
+        Summary($"Performs an implicit conversion from <see cref=\"{_immutableRecordName}\"/> to <see cref=\"{_className}\"/>.");
+        Line($"public static implicit operator {_className}({_immutableRecordName} mutable)");
         Braces(() => Line("return mutable.Build();"));
     }
 }

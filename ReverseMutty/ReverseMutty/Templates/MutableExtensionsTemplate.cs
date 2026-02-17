@@ -2,19 +2,19 @@
 // Atypical Consulting SRL licenses this file to you under the Apache 2.0 license.
 // See the LICENSE file in the project root for full license information.
 
-using Mutty.CodeHelpers;
-using Mutty.Models;
+using ReverseMutty.CodeHelpers;
+using ReverseMutty.Models;
 
-namespace Mutty.Templates;
+namespace ReverseMutty.Templates;
 
 /// <summary>
 /// A template that generates the mutable extensions for a record.
 /// </summary>
 /// <param name="tokens">The tokens for the record.</param>
-public class MutableExtensionsTemplate(RecordTokens tokens) : IndentedCodeBuilder
+public class MutableExtensionsTemplate(ClassTokens tokens) : IndentedCodeBuilder
 {
-    private readonly string _recordName = tokens.RecordName;
-    private readonly string _mutableRecordName = tokens.MutableRecordName;
+    private readonly string _recordName = tokens.ClassName;
+    private readonly string _mutableRecordName = tokens.ImmutableRecordName;
 
     /// <summary>
     /// Generates the code for the mutable extensions.

@@ -4,34 +4,34 @@
 
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
-using Mutty.Abstractions;
-using Mutty.Models;
-using Mutty.Templates;
+using ReverseMutty.Abstractions;
+using ReverseMutty.Models;
+using ReverseMutty.Templates;
 
-namespace Mutty;
+namespace ReverseMutty;
 
 /// <summary>
 /// A generator that creates mutable records.
 /// </summary>
 [Generator]
-public class MutableRecordGenerator : BaseSourceGenerator
+public class RecordGenerator : BaseSourceGenerator
 {
     /// <inheritdoc />
-    public override void GenerateCode(SourceProductionContext context, ImmutableArray<INamedTypeSymbol> recordTypes)
+    public override void GenerateCode(SourceProductionContext context, ImmutableArray<INamedTypeSymbol> classTypes)
     {
-        if (recordTypes.IsDefaultOrEmpty)
+        if (classTypes.IsDefaultOrEmpty)
         {
             return;
         }
 
-        foreach (INamedTypeSymbol record in recordTypes)
+        foreach (INamedTypeSymbol classType in classTypes)
         {
-            RecordTokens recordTokens = new(record);
-            string recordName = recordTokens.RecordName;
+            ClassTokens recordTokens = new(classType);
+            string recordName = recordTokens.ClassName;
             string? namespaceName = recordTokens.NamespaceName;
 
             // Generate mutable wrapper
-            string mutableWrapperSource = new MutableWrapperTemplate(recordTokens).GenerateCode();
+            string mutableWrapperSource = new ImmutableWrapperTemplate(recordTokens).GenerateCode();
             string mutableFileName = (namespaceName is not null)
                 ? $"{namespaceName}.Mutable{recordName}.g.cs"
                 : $"Mutable{recordName}.g.cs";

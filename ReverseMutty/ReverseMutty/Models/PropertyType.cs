@@ -2,7 +2,7 @@
 // Atypical Consulting SRL licenses this file to you under the Apache 2.0 license.
 // See the LICENSE file in the project root for full license information.
 
-namespace Mutty.Models;
+namespace ReverseMutty.Models;
 
 /// <summary>
 /// Represents the type of a property.
@@ -18,7 +18,9 @@ public enum PropertyType
     /// The property is an immutable collection.
     /// </summary>
     ImmutableCollection,
-
+    
+    MutableCollection,
+    
     /// <summary>
     /// The property is of another type.
     /// </summary>
